@@ -1,5 +1,5 @@
 {
-  "name": "coders-app-identity-server",
+  "name": "coders-app-api-key-authenticator",
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
@@ -8,9 +8,10 @@
     "build": "tsc",
     "build:dev": "tsc -w",
     "start": "node .",
-    "start:dev": "nodempn . -q",
+    "start:dev": "nodemon . -q",
     "test": "jest --passWithNoTests",
     "test:dev": "jest --watchAll --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
     "prepare": "husky install"
   },
   "keywords": [],
