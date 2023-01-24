@@ -1,5 +1,5 @@
 import Redis from "ioredis";
-import { environment } from "../loadEnvironments";
+import { environment } from "../loadEnvironments.js";
 
 const {
   redis: { host, password, port },
