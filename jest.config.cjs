@@ -7,6 +7,7 @@ module.exports = {
     "src/**/*.ts",
     "!src/redis/redis.ts",
     "!src/setupTests.ts",
+    "!src/authenticateApp/index.ts",
   ],
   resolver: "jest-ts-webcompat-resolver",
   setupFiles: ["./src/setupTests.ts"],
