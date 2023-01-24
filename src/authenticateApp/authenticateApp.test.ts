@@ -13,7 +13,7 @@ describe("Given the function authenticateApp", () => {
       const isAuthenticated = await authenticateApp(
         apiGateway,
         identityServer,
-        "hash"
+        testHash
       );
 
       expect(isAuthenticated).toBe(isAuthenticatedResult);
