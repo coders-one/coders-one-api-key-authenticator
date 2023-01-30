@@ -1,11 +1,14 @@
 {
   "name": "coders-app-api-key-authenticator",
-  "version": "1.0.0",
-  "description": "",
-  "main": "build/index.js",
-  "module": "build/index.mjs",
+  "version": "0.0.1",
+  "description": "An API key authenticator for apps in Coders App",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "build:full": "tsc",
