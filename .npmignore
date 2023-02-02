@@ -1,0 +1,11 @@
+src
+.github
+husky
+.editorconfig
+.eslintrc.cjs
+.eslintignore
+.lintstagedrc.json
+jest.config.cjs
+sonar-project.properties
+tsconfig.json
+package-lock.json
