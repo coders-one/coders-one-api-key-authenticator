@@ -6,7 +6,41 @@
 npm install coders-app-api-key-authenticator
 ```
 
-## Usage
+## API
+
+### checkApiKey
+
+```ts
+checkApiKey(targetApp, appToAuthenticate);
+```
+
+#### Usage
+
+```ts
+import express from "express";
+import { checkApiKey } from "coders-app-api-key-authenticator";
+
+const app = express();
+
+app.use(checkApiKey(targetApp, appToAuthenticate));
+```
+
+Returns an Express middleware which authenticates the appToAuthenticate against the targetApp(current app) using the apiKey receives in the header "X-API-KEY".
+
+| Parameter         | Type     | Description                                                   |
+| ----------------- | -------- | ------------------------------------------------------------- |
+| targetApp         | `string` | The target application to authenticate against. (current app) |
+| appToAuthenticate | `string` | The application to be authenticated.                          |
+
+---
+
+### authenticateApp
+
+```ts
+authenticateApp(targetApp, appToAuthenticate, hashToAuthenticate);
+```
+
+#### Usage
 
 ```ts
 import { authenticateApp } from "coders-app-api-key-authenticator";
@@ -16,12 +50,6 @@ const isAuthenticated = await authenticateApp(
   appToAuthenticate,
   hashToAuthenticate
 );
-```
-
-## API
-
-```ts
-authenticateApp(targetApp, appToAuthenticate, hashToAuthenticate);
 ```
 
 Authenticates the appToAuthenticate against the targetApp using the hashToAuthenticate.
