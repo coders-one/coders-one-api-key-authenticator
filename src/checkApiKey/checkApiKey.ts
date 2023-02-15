@@ -9,7 +9,7 @@ const checkApiKey =
     const apiKey = req.get(apiKeyHeader);
 
     try {
-      if (!(await authenticateApp(targetApp, appToAuthenticate, apiKey))) {
+      if (!(await authenticateApp(targetApp, appToAuthenticate, apiKey!))) {
         throw new Error("Invalid API key");
       }
 

@@ -37,7 +37,7 @@ Returns an Express middleware which authenticates the appToAuthenticate against 
 ### authenticateApp
 
 ```ts
-authenticateApp(targetApp, appToAuthenticate, hashToAuthenticate);
+authenticateApp(targetApp, appToAuthenticate, keyToAuthenticate);
 ```
 
 #### Usage
@@ -48,18 +48,18 @@ import { authenticateApp } from "coders-app-api-key-authenticator";
 const isAuthenticated = await authenticateApp(
   targetApp,
   appToAuthenticate,
-  hashToAuthenticate
+  keyToAuthenticate
 );
 ```
 
-Authenticates the appToAuthenticate against the targetApp using the hashToAuthenticate.
+Authenticates the appToAuthenticate against the targetApp using the keyToAuthenticate.
 
 Returns a promise that resolves to a boolean indicating whether the application is authenticated or not.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | targetApp | `string` | The target application to authenticate against. (current app) |
 | appToAuthenticate | `string` | The application to be authenticated. |
-| hashToAuthenticate | `string` | The hash used to authenticate the application. |
+| keyToAuthenticate | `string` | The key used to authenticate the application. |
 
 ## Env
 

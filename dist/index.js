@@ -32,17 +32,18 @@ var getApps = async (targetApp) => {
 var getApps_default = getApps;
 
 // src/authenticateApp/authenticateApp.ts
+import bcrypt from "bcryptjs";
 var authenticateApp = async (
   targetApp,
   appToAuthenticate,
-  hashToAuthenticate
+  keyToAuthenticate
 ) => {
   const apps = await getApps_default(targetApp);
   const hash = apps[appToAuthenticate];
   if (!hash) {
     return false;
   }
-  return hash === hashToAuthenticate;
+  return bcrypt.compare(keyToAuthenticate, hash);
 };
 var authenticateApp_default = authenticateApp;
 

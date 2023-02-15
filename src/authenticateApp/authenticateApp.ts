@@ -1,9 +1,10 @@
 import getApps from "../redis/getApps/getApps.js";
+import bcrypt from "bcryptjs";
 
 const authenticateApp = async (
   targetApp: string,
   appToAuthenticate: string,
-  hashToAuthenticate: string
+  keyToAuthenticate: string
 ): Promise<boolean> => {
   const apps = await getApps(targetApp);
 
@@ -13,7 +14,7 @@ const authenticateApp = async (
     return false;
   }
 
-  return hash === hashToAuthenticate;
+  return bcrypt.compare(keyToAuthenticate, hash);
 };
 
 export default authenticateApp;

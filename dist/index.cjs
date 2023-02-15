@@ -1,3 +1,4 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -64,13 +65,14 @@ var getApps = async (targetApp) => {
 var getApps_default = getApps;
 
 // src/authenticateApp/authenticateApp.ts
-var authenticateApp = async (targetApp, appToAuthenticate, hashToAuthenticate) => {
+var import_bcryptjs = __toESM(require("bcryptjs"), 1);
+var authenticateApp = async (targetApp, appToAuthenticate, keyToAuthenticate) => {
   const apps = await getApps_default(targetApp);
   const hash = apps[appToAuthenticate];
   if (!hash) {
     return false;
   }
-  return hash === hashToAuthenticate;
+  return import_bcryptjs.default.compare(keyToAuthenticate, hash);
 };
 var authenticateApp_default = authenticateApp;
 

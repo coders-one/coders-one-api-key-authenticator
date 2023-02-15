@@ -1,12 +1,13 @@
 import getApps from "./getApps.js";
 import appNames from "../../utils/appNames.js";
+import { hashedKey } from "../../setupTests.js";
 
 const { apiGateway, identityServer } = appNames;
 
 describe("Given the function getApps", () => {
   describe("When it receives the targetApp 'api-gateway' ", () => {
     test("Then it should return 'identity-server' and its hash", async () => {
-      const expectedApps = { [identityServer]: "hash" };
+      const expectedApps = { [identityServer]: hashedKey };
 
       const receivedApps = await getApps(apiGateway);
 
