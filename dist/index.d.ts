@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 declare const authenticateApp: (
   targetApp: string,
   appToAuthenticate: string,
-  hashToAuthenticate: string
+  keyToAuthenticate: string
 ) => Promise<boolean>;
 
 declare const checkApiKey: (
