@@ -6,8 +6,15 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup-node src/index.ts --format cjs,esm --dts --clean",
     "build:full": "tsc",
     "build:dev": "tsc -w",
     "start": "node .",
