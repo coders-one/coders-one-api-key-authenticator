@@ -1,5 +1,5 @@
 // src/redis/redis.ts
-import Redis from "ioredis";
+import * as ioredis from "ioredis";
 
 // src/loadEnvironments.ts
 import dotenv from "dotenv";
@@ -7,19 +7,20 @@ dotenv.config();
 var {
   REDIS_HOST: host,
   REDIS_PORT: port,
-  REDIS_PASSWORD: password
+  REDIS_PASSWORD: password,
 } = process.env;
 var environment = {
   redis: {
     host,
     port: +port,
-    password
-  }
+    password,
+  },
 };
 
 // src/redis/redis.ts
+var { default: Redis } = ioredis;
 var {
-  redis: { host: host2, password: password2, port: port2 }
+  redis: { host: host2, password: password2, port: port2 },
 } = environment;
 var redis = new Redis({ host: host2, password: password2, port: port2 });
 var redis_default = redis;
@@ -33,7 +34,11 @@ var getApps_default = getApps;
 
 // src/authenticateApp/authenticateApp.ts
 import bcrypt from "bcryptjs";
-var authenticateApp = async (targetApp, appToAuthenticate, keyToAuthenticate) => {
+var authenticateApp = async (
+  targetApp,
+  appToAuthenticate,
+  keyToAuthenticate
+) => {
   const apps = await getApps_default(targetApp);
   const hash = apps[appToAuthenticate];
   if (!hash) {
@@ -48,7 +53,9 @@ var checkApiKey = (targetApp, appToAuthenticate) => async (req, res, next) => {
   const apiKeyHeader = "X-API-KEY";
   const apiKey = req.get(apiKeyHeader);
   try {
-    if (!await authenticateApp_default(targetApp, appToAuthenticate, apiKey)) {
+    if (
+      !(await authenticateApp_default(targetApp, appToAuthenticate, apiKey))
+    ) {
       throw new Error("Invalid API key");
     }
     next();
@@ -60,5 +67,5 @@ var checkApiKey = (targetApp, appToAuthenticate) => async (req, res, next) => {
 var checkApiKey_default = checkApiKey;
 export {
   authenticateApp_default as authenticateApp,
-  checkApiKey_default as checkApiKey
+  checkApiKey_default as checkApiKey,
 };

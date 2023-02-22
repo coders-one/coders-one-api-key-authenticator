@@ -31,7 +31,7 @@ __export(src_exports, {
 module.exports = __toCommonJS(src_exports);
 
 // src/redis/redis.ts
-var import_ioredis = __toESM(require("ioredis"), 1);
+var ioredis = __toESM(require("ioredis"), 1);
 
 // src/loadEnvironments.ts
 var import_dotenv = __toESM(require("dotenv"), 1);
@@ -50,10 +50,11 @@ var environment = {
 };
 
 // src/redis/redis.ts
+var { default: Redis } = ioredis;
 var {
   redis: { host: host2, password: password2, port: port2 }
 } = environment;
-var redis = new import_ioredis.default({ host: host2, password: password2, port: port2 });
+var redis = new Redis({ host: host2, password: password2, port: port2 });
 var redis_default = redis;
 
 // src/redis/getApps/getApps.ts
