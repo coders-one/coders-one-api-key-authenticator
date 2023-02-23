@@ -3,18 +3,21 @@ import bcrypt from "bcryptjs";
 
 const authenticateApp = async (
   targetApp: string,
-  appToAuthenticate: string,
   keyToAuthenticate: string
 ): Promise<boolean> => {
   const apps = await getApps(targetApp);
 
-  const hash = apps[appToAuthenticate];
+  const hashes = Object.values(apps);
 
-  if (!hash) {
+  if (!hashes.length) {
     return false;
   }
 
-  return bcrypt.compare(keyToAuthenticate, hash);
+  const hashComparisons = hashes.map(async (hash) =>
+    bcrypt.compare(keyToAuthenticate, hash)
+  );
+
+  return (await Promise.all(hashComparisons)).includes(true);
 };
 
 export default authenticateApp;
