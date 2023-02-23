@@ -11,7 +11,7 @@ npm install coders-app-api-key-authenticator
 ### checkApiKey
 
 ```ts
-checkApiKey(targetApp, appToAuthenticate);
+checkApiKey(targetApp);
 ```
 
 #### Usage
@@ -22,22 +22,21 @@ import { checkApiKey } from "coders-app-api-key-authenticator";
 
 const app = express();
 
-app.use(checkApiKey(targetApp, appToAuthenticate));
+app.use(checkApiKey(targetApp));
 ```
 
 Returns an Express middleware which authenticates the appToAuthenticate against the targetApp(current app) using the apiKey receives in the header "X-API-KEY".
 
-| Parameter         | Type     | Description                                                   |
-| ----------------- | -------- | ------------------------------------------------------------- |
-| targetApp         | `string` | The target application to authenticate against. (current app) |
-| appToAuthenticate | `string` | The application to be authenticated.                          |
+| Parameter | Type     | Description                                                   |
+| --------- | -------- | ------------------------------------------------------------- |
+| targetApp | `string` | The target application to authenticate against. (current app) |
 
 ---
 
 ### authenticateApp
 
 ```ts
-authenticateApp(targetApp, appToAuthenticate, keyToAuthenticate);
+authenticateApp(targetApp, keyToAuthenticate);
 ```
 
 #### Usage
@@ -45,11 +44,7 @@ authenticateApp(targetApp, appToAuthenticate, keyToAuthenticate);
 ```ts
 import { authenticateApp } from "coders-app-api-key-authenticator";
 
-const isAuthenticated = await authenticateApp(
-  targetApp,
-  appToAuthenticate,
-  keyToAuthenticate
-);
+const isAuthenticated = await authenticateApp(targetApp, keyToAuthenticate);
 ```
 
 Authenticates the appToAuthenticate against the targetApp using the keyToAuthenticate.
@@ -58,7 +53,6 @@ Returns a promise that resolves to a boolean indicating whether the application 
 | Parameter | Type | Description |
 | --- | --- | --- |
 | targetApp | `string` | The target application to authenticate against. (current app) |
-| appToAuthenticate | `string` | The application to be authenticated. |
 | keyToAuthenticate | `string` | The key used to authenticate the application. |
 
 ## Env
