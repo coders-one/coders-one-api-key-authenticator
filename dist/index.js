@@ -7,20 +7,20 @@ dotenv.config();
 var {
   REDIS_HOST: host,
   REDIS_PORT: port,
-  REDIS_PASSWORD: password,
+  REDIS_PASSWORD: password
 } = process.env;
 var environment = {
   redis: {
     host,
     port: +port,
-    password,
-  },
+    password
+  }
 };
 
 // src/redis/redis.ts
 var { default: Redis } = ioredis;
 var {
-  redis: { host: host2, password: password2, port: port2 },
+  redis: { host: host2, password: password2, port: port2 }
 } = environment;
 var redis = new Redis({ host: host2, password: password2, port: port2 });
 var redis_default = redis;
@@ -34,38 +34,36 @@ var getApps_default = getApps;
 
 // src/authenticateApp/authenticateApp.ts
 import bcrypt from "bcryptjs";
-var authenticateApp = async (
-  targetApp,
-  appToAuthenticate,
-  keyToAuthenticate
-) => {
+var authenticateApp = async (targetApp, keyToAuthenticate) => {
   const apps = await getApps_default(targetApp);
-  const hash = apps[appToAuthenticate];
-  if (!hash) {
+  const hashes = Object.values(apps);
+  if (!hashes.length) {
     return false;
   }
-  return bcrypt.compare(keyToAuthenticate, hash);
+  const hashComparisons = hashes.map(
+    async (hash) => bcrypt.compare(keyToAuthenticate, hash)
+  );
+  return (await Promise.all(hashComparisons)).includes(true);
 };
 var authenticateApp_default = authenticateApp;
 
 // src/checkApiKey/checkApiKey.ts
-var checkApiKey = (targetApp, appToAuthenticate) => async (req, res, next) => {
+var checkApiKey = (targetApp) => async (req, res, next) => {
   const apiKeyHeader = "X-API-KEY";
   const apiKey = req.get(apiKeyHeader);
   try {
-    if (
-      !(await authenticateApp_default(targetApp, appToAuthenticate, apiKey))
-    ) {
-      throw new Error("Invalid API key");
+    if (!await authenticateApp_default(targetApp, apiKey)) {
+      throw new Error("Invalid API Key");
     }
     next();
   } catch (error) {
     error.statusCode = 401;
+    error.publicMessage = "Invalid API Key";
     next(error);
   }
 };
 var checkApiKey_default = checkApiKey;
 export {
   authenticateApp_default as authenticateApp,
-  checkApiKey_default as checkApiKey,
+  checkApiKey_default as checkApiKey
 };

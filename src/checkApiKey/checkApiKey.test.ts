@@ -19,10 +19,10 @@ const next: NextFunction = jest.fn();
 
 afterEach(() => jest.clearAllMocks());
 
-describe("Given the middleware returned from checkApiKey invoked with targetApp 'api-gateway' and appToAuthenticate 'identity-server'", () => {
+describe("Given the middleware returned from checkApiKey invoked with targetApp 'api-gateway'", () => {
   describe("When it receives a request with header X-API-KEY 'key'", () => {
     test("Then it should invoke next with no parameters", async () => {
-      const checkApiKeyMiddleware = checkApiKey(apiGateway, identityServer);
+      const checkApiKeyMiddleware = checkApiKey(apiGateway);
 
       await checkApiKeyMiddleware(req as Request, {} as Response, next);
 
@@ -31,11 +31,11 @@ describe("Given the middleware returned from checkApiKey invoked with targetApp 
   });
 });
 
-describe("Given the middleware returned from checkApiKey invoked with targetApp 'identity-server' and appToAuthenticate 'api-gateway'", () => {
+describe("Given the middleware returned from checkApiKey invoked with targetApp 'identity-server'", () => {
   describe("When it receives a request with header X-API-KEY 'key'", () => {
     test("Then it should invoke next with an error with message 'Invalid API key' and statusCode 401", async () => {
-      const checkApiKeyMiddleware = checkApiKey(identityServer, apiGateway);
-      const invalidKeyMessage = "Invalid API key";
+      const checkApiKeyMiddleware = checkApiKey(identityServer);
+      const invalidKeyMessage = "Invalid API Key";
       const invalidKeyError = new Error(invalidKeyMessage);
       (invalidKeyError as CustomError).statusCode = 401;
 

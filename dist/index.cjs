@@ -66,27 +66,31 @@ var getApps_default = getApps;
 
 // src/authenticateApp/authenticateApp.ts
 var import_bcryptjs = __toESM(require("bcryptjs"), 1);
-var authenticateApp = async (targetApp, appToAuthenticate, keyToAuthenticate) => {
+var authenticateApp = async (targetApp, keyToAuthenticate) => {
   const apps = await getApps_default(targetApp);
-  const hash = apps[appToAuthenticate];
-  if (!hash) {
+  const hashes = Object.values(apps);
+  if (!hashes.length) {
     return false;
   }
-  return import_bcryptjs.default.compare(keyToAuthenticate, hash);
+  const hashComparisons = hashes.map(
+    async (hash) => import_bcryptjs.default.compare(keyToAuthenticate, hash)
+  );
+  return (await Promise.all(hashComparisons)).includes(true);
 };
 var authenticateApp_default = authenticateApp;
 
 // src/checkApiKey/checkApiKey.ts
-var checkApiKey = (targetApp, appToAuthenticate) => async (req, res, next) => {
+var checkApiKey = (targetApp) => async (req, res, next) => {
   const apiKeyHeader = "X-API-KEY";
   const apiKey = req.get(apiKeyHeader);
   try {
-    if (!await authenticateApp_default(targetApp, appToAuthenticate, apiKey)) {
-      throw new Error("Invalid API key");
+    if (!await authenticateApp_default(targetApp, apiKey)) {
+      throw new Error("Invalid API Key");
     }
     next();
   } catch (error) {
     error.statusCode = 401;
+    error.publicMessage = "Invalid API Key";
     next(error);
   }
 };
