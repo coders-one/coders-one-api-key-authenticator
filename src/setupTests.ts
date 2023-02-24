@@ -5,16 +5,22 @@ export const hashedKey = bcrypt.hashSync("key", 10);
 
 const { apiGateway, identityServer } = appNames;
 
-const mockGet: (targetApp: string) => string = jest
+const mockHashGet: (
+  targetApp: string,
+  appToAuthenticate: string
+) => string | undefined = jest
   .fn()
-  .mockImplementation((targetApp: string): string => {
-    if (targetApp === apiGateway) {
-      return JSON.stringify({ [identityServer]: hashedKey });
-    }
+  .mockImplementation(
+    (targetApp: string, appToAuthenticate: string): string | undefined => {
+      if (targetApp === apiGateway && appToAuthenticate === identityServer) {
+        return hashedKey;
+      }
 
-    return "";
-  });
+      return null;
+    }
+  );
 
 jest.mock("./redis/redis.js", () => ({
-  get: (targetApp: string) => mockGet(targetApp),
+  hget: (targetApp: string, appToAuthenticate: string) =>
+    mockHashGet(targetApp, appToAuthenticate),
 }));

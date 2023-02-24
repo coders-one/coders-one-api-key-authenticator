@@ -1,4 +1,4 @@
-import getApps from "../redis/getApps/getApps.js";
+import getHash from "../redis/getHash/getHash.js";
 import bcrypt from "bcryptjs";
 
 const authenticateApp = async (
@@ -6,9 +6,7 @@ const authenticateApp = async (
   appToAuthenticate: string,
   keyToAuthenticate: string
 ): Promise<boolean> => {
-  const apps = await getApps(targetApp);
-
-  const hash = apps[appToAuthenticate];
+  const hash = await getHash(targetApp, appToAuthenticate);
 
   if (!hash) {
     return false;
