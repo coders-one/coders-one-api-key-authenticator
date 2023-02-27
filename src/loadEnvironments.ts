@@ -11,7 +11,7 @@ const {
 export const environment = {
   redis: {
     host,
-    port: +port!,
+    port: +port,
     password,
   },
 };
