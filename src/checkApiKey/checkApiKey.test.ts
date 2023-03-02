@@ -1,10 +1,11 @@
 import type { Request, NextFunction, Response } from "express";
 import checkApiKey from "./checkApiKey";
 import appNames from "../utils/appNames";
-import type { CustomError } from "../types";
 import requestHeaders from "../utils/requestHeaders";
+import apiKeyErrors from "../utils/errors";
 
 const { apiGateway, identityServer } = appNames;
+const { invalidApiKeyError } = apiKeyErrors;
 
 const headers: Record<string, string> = {
   [requestHeaders.apiKey]: "key",
@@ -38,13 +39,10 @@ describe("Given the middleware returned from checkApiKey invoked with targetApp 
     test("Then it should invoke next with an error with message 'Invalid API key' and statusCode 401", async () => {
       req.headers = { ...headers, [requestHeaders.apiKey]: apiGateway };
       const checkApiKeyMiddleware = checkApiKey(identityServer);
-      const invalidKeyMessage = "Invalid API key";
-      const invalidKeyError = new Error(invalidKeyMessage);
-      (invalidKeyError as CustomError).statusCode = 401;
 
       await checkApiKeyMiddleware(req as Request, {} as Response, next);
 
-      expect(next).toHaveBeenCalledWith(invalidKeyError);
+      expect(next).toHaveBeenCalledWith(invalidApiKeyError);
     });
   });
 });

@@ -1,7 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import authenticateApp from "../authenticateApp";
-import type { CustomError } from "../types";
 import requestHeaders from "../utils/requestHeaders";
+import apiKeyErrors from "../utils/errors";
+
+const { invalidApiKeyError } = apiKeyErrors;
 
 const checkApiKey =
   (targetApp: string) =>
@@ -11,14 +13,11 @@ const checkApiKey =
 
     try {
       if (!(await authenticateApp(targetApp, appToAuthenticate, apiKey))) {
-        throw new Error("Invalid API key");
+        throw invalidApiKeyError;
       }
 
       next();
     } catch (error: unknown) {
-      (error as CustomError).statusCode = 401;
-      (error as CustomError).publicMessage = (error as Error).message;
-
       next(error);
     }
   };

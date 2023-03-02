@@ -82,18 +82,37 @@ var requestHeaders = {
 };
 var requestHeaders_default = requestHeaders;
 
+// src/CustomError/CustomError.ts
+var CustomError = class extends Error {
+  constructor(message, statusCode, publicMessage) {
+    super(message);
+    this.statusCode = statusCode;
+    this.publicMessage = publicMessage;
+  }
+};
+var CustomError_default = CustomError;
+
+// src/utils/errors.ts
+var apiKeyErrors = {
+  invalidApiKeyError: new CustomError_default(
+    "Invalid Api Key",
+    401,
+    "Invalid Api Key"
+  )
+};
+var errors_default = apiKeyErrors;
+
 // src/checkApiKey/checkApiKey.ts
+var { invalidApiKeyError } = errors_default;
 var checkApiKey = (targetApp) => async (req, res, next) => {
   const apiKey = req.get(requestHeaders_default.apiKey);
   const appToAuthenticate = req.get(requestHeaders_default.apiName);
   try {
     if (!await authenticateApp_default(targetApp, appToAuthenticate, apiKey)) {
-      throw new Error("Invalid API key");
+      throw invalidApiKeyError;
     }
     next();
   } catch (error) {
-    error.statusCode = 401;
-    error.publicMessage = error.message;
     next(error);
   }
 };
