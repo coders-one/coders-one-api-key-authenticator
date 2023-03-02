@@ -1,6 +1,6 @@
-import getHash from "./getHash.js";
+import hashedKey from "../../mocks/hashedKey.js";
 import appNames from "../../utils/appNames.js";
-import { hashedKey } from "../../setupTests.js";
+import getHash from "./getHash.js";
 
 const { apiGateway, identityServer } = appNames;
 
