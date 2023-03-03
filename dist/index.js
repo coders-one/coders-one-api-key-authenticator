@@ -25,12 +25,12 @@ var {
 var redis = new Redis({ host: host2, password: password2, port: port2 });
 var redis_default = redis;
 
-// src/redis/getApps/getApps.ts
-var getApps = async (targetApp) => {
-  const apps = await redis_default.get(targetApp);
-  return apps ? JSON.parse(apps) : {};
+// src/redis/getHash/getHash.ts
+var getHash = async (targetApp, appToAuthenticate) => {
+  const hash = await redis_default.hget(targetApp, appToAuthenticate);
+  return hash;
 };
-var getApps_default = getApps;
+var getHash_default = getHash;
 
 // src/authenticateApp/authenticateApp.ts
 import bcrypt from "bcryptjs";
@@ -39,8 +39,7 @@ var authenticateApp = async (
   appToAuthenticate,
   keyToAuthenticate
 ) => {
-  const apps = await getApps_default(targetApp);
-  const hash = apps[appToAuthenticate];
+  const hash = await getHash_default(targetApp, appToAuthenticate);
   if (!hash) {
     return false;
   }
@@ -48,19 +47,46 @@ var authenticateApp = async (
 };
 var authenticateApp_default = authenticateApp;
 
+// src/utils/requestHeaders.ts
+var requestHeaders = {
+  apiName: "X-API-NAME",
+  apiKey: "X-API-KEY",
+};
+var requestHeaders_default = requestHeaders;
+
+// src/CustomError/CustomError.ts
+var CustomError = class extends Error {
+  constructor(message, statusCode, publicMessage) {
+    super(message);
+    this.statusCode = statusCode;
+    this.publicMessage = publicMessage;
+  }
+};
+var CustomError_default = CustomError;
+
+// src/utils/errors.ts
+var apiKeyErrors = {
+  invalidApiKeyError: new CustomError_default(
+    "Invalid Api Key",
+    401,
+    "Invalid Api Key"
+  ),
+};
+var errors_default = apiKeyErrors;
+
 // src/checkApiKey/checkApiKey.ts
-var checkApiKey = (targetApp, appToAuthenticate) => async (req, res, next) => {
-  const apiKeyHeader = "X-API-KEY";
-  const apiKey = req.get(apiKeyHeader);
+var { invalidApiKeyError } = errors_default;
+var checkApiKey = (targetApp) => async (req, res, next) => {
+  const apiKey = req.get(requestHeaders_default.apiKey);
+  const appToAuthenticate = req.get(requestHeaders_default.apiName);
   try {
     if (
       !(await authenticateApp_default(targetApp, appToAuthenticate, apiKey))
     ) {
-      throw new Error("Invalid API key");
+      throw invalidApiKeyError;
     }
     next();
   } catch (error) {
-    error.statusCode = 401;
     next(error);
   }
 };
