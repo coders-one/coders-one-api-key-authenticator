@@ -17,6 +17,14 @@ module.exports = {
         ],
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            types: {
+              null: false,
+            },
+          },
+        ],
       },
     },
   ],
