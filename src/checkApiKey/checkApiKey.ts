@@ -12,6 +12,10 @@ const checkApiKey =
     const appToAuthenticate = req.get(requestHeaders.apiName);
 
     try {
+      if (!appToAuthenticate || !apiKey) {
+        throw invalidApiKeyError;
+      }
+
       if (!(await authenticateApp(targetApp, appToAuthenticate, apiKey))) {
         throw invalidApiKeyError;
       }
