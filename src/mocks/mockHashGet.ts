@@ -6,10 +6,10 @@ const { apiGateway, identityServer } = appNames;
 const mockHashGet: (
   targetApp: string,
   appToAuthenticate: string
-) => string | undefined = jest
+) => string | null = jest
   .fn()
   .mockImplementation(
-    (targetApp: string, appToAuthenticate: string): string | undefined => {
+    (targetApp: string, appToAuthenticate: string): string | null => {
       if (targetApp === apiGateway && appToAuthenticate === identityServer) {
         return hashedKey;
       }

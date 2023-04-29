@@ -8,6 +8,11 @@ const {
   REDIS_PASSWORD: password,
 } = process.env;
 
+if (!port || !password || !host) {
+  console.error("Missing environmental variables");
+  process.exit(1);
+}
+
 export const environment = {
   redis: {
     host,

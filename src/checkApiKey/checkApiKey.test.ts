@@ -45,4 +45,16 @@ describe("Given the middleware returned from checkApiKey invoked with targetApp 
       expect(next).toHaveBeenCalledWith(invalidApiKeyError);
     });
   });
+
+  describe("When it receives a request with no api key nor app to authenticate ", () => {
+    test("Then it should invoke next with an error with message 'Invalid API key'", async () => {
+      const checkApiKeyMiddleware = checkApiKey(identityServer);
+
+      req.get = jest.fn().mockReturnValue(undefined);
+
+      await checkApiKeyMiddleware(req as Request, {} as Response, next);
+
+      expect(next).toHaveBeenCalledWith(invalidApiKeyError);
+    });
+  });
 });
